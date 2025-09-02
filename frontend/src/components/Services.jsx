@@ -1,64 +1,20 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../api/axiosConfig';
 
 const serviceEnum = [
-  'Plumbing',
-  'Electrical Work',
-  'Carpentry',
-  'Painting',
-  'Cleaning',
-  'Gardening',
-  'Masonry',
-  'Roofing',
-  'Tiling',
-  'Welding',
-  'HVAC',
-  'Generator Repairer',
-  'Pest Control',
-  'Locksmith',
-  'Mechanic',
-  'Auto Detailing',
-  'Electronics Repair',
-  'Furniture Making',
-  'Interior Design',
-  'Exterior Design',
-  'Pool Maintenance',
-  'Landscape Design',
-  'Home Renovation',
-  'Appliance Repair',
-  'Glass Installation/Repair',
-  'Flooring',
-  'Plastering',
-  'Gutter Cleaning/Installation',
-  'Concrete Work',
-  'Drywall Installation',
-  'Sewing/Tailoring',
-  'Fashion Design',
-  'Jewelry Making',
-  'Catering Services',
-  'Baking/Pastry',
-  'Barber/Hairdresser',
-  'Beauty Therapy',
-  'Massage Therapy',
-  'Tattoo Artist',
-  'Makeup Artist',
-  'Photography',
-  'Videography',
-  'Music Lessons',
-  'Dance Instructor',
-  'Fitness Trainer',
-  'Yoga Instructor',
-  'Dog Walking/Pet Care',
-  'Pet Grooming',
-  'Carpet Cleaning',
-  'Window Cleaning',
-  'Chimney Sweeping',
-  'Solar Panel Installation',
-  'IT Services',
-  'Web Development',
-  'Graphic Design',
-  '3D Printing',
-  'Other'
+  'Plumbing', 'Electrical Work', 'Carpentry', 'Painting', 'Cleaning', 'Gardening',
+  'Masonry', 'Roofing', 'Tiling', 'Welding', 'HVAC', 'Generator Repairer', 'Pest Control',
+  'Locksmith', 'Mechanic', 'Auto Detailing', 'Electronics Repair', 'Furniture Making',
+  'Interior Design', 'Exterior Design', 'Pool Maintenance', 'Landscape Design',
+  'Home Renovation', 'Appliance Repair', 'Glass Installation/Repair', 'Flooring',
+  'Plastering', 'Gutter Cleaning/Installation', 'Concrete Work', 'Drywall Installation',
+  'Sewing/Tailoring', 'Fashion Design', 'Jewelry Making', 'Catering Services',
+  'Baking/Pastry', 'Barber/Hairdresser', 'Beauty Therapy', 'Massage Therapy', 'Tattoo Artist',
+  'Makeup Artist', 'Photography', 'Videography', 'Music Lessons', 'Dance Instructor',
+  'Fitness Trainer', 'Yoga Instructor', 'Dog Walking/Pet Care', 'Pet Grooming',
+  'Carpet Cleaning', 'Window Cleaning', 'Chimney Sweeping', 'Solar Panel Installation',
+  'IT Services', 'Web Development', 'Graphic Design', '3D Printing', 'Other'
 ];
 
 // Turn enum into array of objects with default description
@@ -69,6 +25,7 @@ const services = serviceEnum.map((name, index) => ({
 }));
 
 const Services = () => {
+  const navigate = useNavigate();
   const [selectedService, setSelectedService] = useState(null);
   const [artisans, setArtisans] = useState([]);
   const [searchLocation, setSearchLocation] = useState('');
@@ -79,7 +36,7 @@ const Services = () => {
 
     if (!token) {
       alert('You need to log in first.');
-      window.location.href = '/login';
+      navigate('/login'); // ✅ SPA navigation
       return;
     }
 
@@ -105,7 +62,6 @@ const Services = () => {
     <section id="services" style={styles.section}>
       <h2 style={styles.title}>Services You Can Get</h2>
 
-      {/* Instruction */}
       <p style={styles.instruction}>
         Click on any service card to see available artisans (login required).
       </p>
@@ -126,7 +82,6 @@ const Services = () => {
         ))}
       </div>
 
-      {/* Modal */}
       {modalOpen && (
         <div style={modalStyles.overlay} onClick={() => setModalOpen(false)}>
           <div style={modalStyles.modal} onClick={(e) => e.stopPropagation()}>
