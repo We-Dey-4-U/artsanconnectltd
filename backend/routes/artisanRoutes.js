@@ -9,7 +9,8 @@ const {
   addService,
   addArtisanService,
   uploadServiceImages,
-  getArtisanServices
+  getArtisanServices,
+  getArtisansByService
 } = require('../controllers/artisanController');
 
 // ------------------- Artisan Portfolio -------------------
@@ -34,6 +35,9 @@ router.post(
   upload.array('files', 5),
   uploadServiceImages
 );
+
+// Fetch artisans by service query
+router.get('/', getArtisansByService);
 
 // ------------------- Nearby Artisans -------------------
 router.get('/nearby', findNearbyArtisans);

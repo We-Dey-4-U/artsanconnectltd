@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const heroImages = [
   '/images/artisan1.jpg',
   '/images/electrician.png',
-  '/images/tailorbarbar.png',
+  '/images/decorator.png',
 ];
 
 const Hero = () => {

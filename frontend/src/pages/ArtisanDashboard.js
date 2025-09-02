@@ -23,6 +23,68 @@ const ArtisanDashboard = () => {
   const [portfolioFiles, setPortfolioFiles] = useState([]);
   const [orders, setOrders] = useState([]);
 
+ // **Available services array**
+const availableServices = [
+  'Plumbing',
+  'Electrical Work',
+  'Carpentry',
+  'Painting',
+  'Cleaning',
+  'Gardening',
+  'Masonry',
+  'Roofing',
+  'Tiling',
+  'Welding',
+  'HVAC',
+  'Generator Repairer', // <-- added
+  'Pest Control',
+  'Locksmith',
+  'Mechanic',
+  'Auto Detailing',
+  'Electronics Repair',
+  'Furniture Making',
+  'Interior Design',
+  'Exterior Design',
+  'Pool Maintenance',
+  'Landscape Design',
+  'Home Renovation',
+  'Appliance Repair',
+  'Glass Installation/Repair',
+  'Flooring',
+  'Plastering',
+  'Gutter Cleaning/Installation',
+  'Concrete Work',
+  'Drywall Installation',
+  'Sewing/Tailoring',
+  'Fashion Design',
+  'Jewelry Making',
+  'Catering Services',
+  'Baking/Pastry',
+  'Barber/Hairdresser',
+  'Beauty Therapy',
+  'Massage Therapy',
+  'Tattoo Artist',
+  'Makeup Artist',
+  'Photography',
+  'Videography',
+  'Music Lessons',
+  'Dance Instructor',
+  'Fitness Trainer',
+  'Yoga Instructor',
+  'Dog Walking/Pet Care',
+  'Pet Grooming',
+  'Carpet Cleaning',
+  'Window Cleaning',
+  'Chimney Sweeping',
+  'Solar Panel Installation',
+  'IT Services',
+  'Web Development',
+  'Graphic Design',
+  '3D Printing',
+  'Other'
+];
+
+
   useEffect(() => {
     if (user?._id && token) {
       setPortfolio(user.portfolio || []);
@@ -57,7 +119,7 @@ const ArtisanDashboard = () => {
     if (!portfolioFiles.length || !user?._id || !token) return;
     try {
       const res = await uploadPortfolio(user._id, portfolioFiles, token);
-      setPortfolio(res.portfolio);
+      setPortfolio(res.portfolio || []);
       setMessage('Portfolio uploaded successfully!');
     } catch (err) {
       console.error(err.response?.data || err.message);
@@ -101,7 +163,7 @@ const ArtisanDashboard = () => {
     try {
       const res = await uploadServiceImages(user._id, serviceId, files, token);
       setServices(prev =>
-        prev.map(s => (s._id === serviceId ? { ...s, images: res.images } : s))
+        prev.map(s => (s._id === serviceId ? { ...s, images: res.images || [] } : s))
       );
       setMessage('Service images uploaded successfully!');
     } catch (err) {
@@ -127,7 +189,7 @@ const ArtisanDashboard = () => {
             <button onClick={handleUploadPortfolio} style={styles.button}>Upload</button>
           </div>
           <div style={styles.imageGrid}>
-            {portfolio.map((img, idx) => (
+            {(portfolio || []).map((img, idx) => (
               <img 
                 key={idx} 
                 src={`http://localhost:5000/${img}`} 
@@ -142,13 +204,18 @@ const ArtisanDashboard = () => {
         <section style={styles.section}>
           <h2 style={styles.subtitle}>Add Service</h2>
           <form onSubmit={handleAddService} style={styles.form}>
-            <input 
-              value={name} 
-              onChange={e => setName(e.target.value)} 
-              placeholder="Service Name" 
-              required 
-              style={styles.input} 
-            />
+            <select
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
+              style={styles.input}
+            >
+              <option value="" disabled>Select a service</option>
+              {(availableServices || []).map((service, idx) => (
+                <option key={idx} value={service}>{service}</option>
+              ))}
+            </select>
+
             <input 
               value={description} 
               onChange={e => setDescription(e.target.value)} 
@@ -178,7 +245,7 @@ const ArtisanDashboard = () => {
         {/* List Services */}
         <section style={styles.section}>
           <h2 style={styles.subtitle}>Your Services</h2>
-          {services.length > 0 ? (
+          {(services || []).length > 0 ? (
             <div style={{ overflowX: 'auto' }}>
               <table style={styles.table}>
                 <thead>
@@ -192,7 +259,7 @@ const ArtisanDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {services.map(service => (
+                  {(services || []).map(service => (
                     <tr key={service._id}>
                       <td style={styles.td}>{service.name}</td>
                       <td style={styles.td}>{service.description}</td>
@@ -200,7 +267,7 @@ const ArtisanDashboard = () => {
                       <td style={styles.td}>{service.duration} mins</td>
                       <td style={styles.td}>
                         <div style={styles.imageGrid}>
-                          {service.images?.map((img, idx) => (
+                          {(service.images || []).map((img, idx) => (
                             <img
                               key={idx}
                               src={`http://localhost:5000/${img}`}
@@ -233,9 +300,9 @@ const ArtisanDashboard = () => {
         {/* Customer Orders Section */}
         <section style={styles.section}>
           <h2 style={styles.subtitle}>Customer Requests</h2>
-          {orders.length ? (
+          {(orders || []).length ? (
             <div style={styles.orderGrid}>
-              {orders.map(order => (
+              {(orders || []).map(order => (
                 <div key={order._id} style={styles.orderCard}>
                   <h4 style={styles.orderTitle}>Customer: {order.customer?.name}</h4>
                   <p><strong>Email:</strong> {order.customer?.email}</p>
@@ -265,7 +332,7 @@ const ArtisanDashboard = () => {
 };
 
 const styles = {
-  container: { maxWidth: '1100px',backgroundColor: '#f0f8ff', margin: '20px auto', padding: '0 20px', fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", color: '#2c3e50' },
+  container: { maxWidth: '1100px', backgroundColor: '#f0f8ff', margin: '20px auto', padding: '0 20px', fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", color: '#2c3e50' },
   title: { textAlign: 'center', marginBottom: '30px', fontSize: '32px', fontWeight: '700' },
   subtitle: { color: '#34495e', marginBottom: '15px', fontSize: '22px', fontWeight: '600', borderBottom: '2px solid #2980b9', display: 'inline-block', paddingBottom: '5px' },
   section: { marginBottom: '50px' },

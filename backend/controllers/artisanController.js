@@ -26,6 +26,9 @@ const getLocationDetails = async (lat, lng) => {
   }
 };
 
+
+
+
 // ------------------- Nearby Artisans -------------------
 exports.findNearbyArtisans = async (req, res) => {
   const { lat, lng } = req.query;
@@ -182,6 +185,25 @@ exports.getArtisanServices = async (req, res) => {
     res.json({ services: artisan.services });
   } catch (err) {
     console.error("Error fetching artisan services:", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+// Fetch artisans by service name
+exports.getArtisansByService = async (req, res) => {
+  const { service } = req.query;
+
+  if (!service) {
+    return res.status(400).json({ message: 'Service is required' });
+  }
+
+  try {
+    // Find artisans who offer this service (match by name in services array)
+    const artisans = await Artisan.find({ 'services.name': service });
+    res.json(artisans);
+  } catch (err) {
+    console.error('Error fetching artisans by service:', err.message);
     res.status(500).json({ message: err.message });
   }
 };
