@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // backend URL
+  baseURL: 'https://artsanconnectltd-3io0.onrender.com/api', // backend URL
 });
 
 api.interceptors.request.use(config => {
