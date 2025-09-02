@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'https://artsanconnectltd-3io0.onrender.com/api';
-
+const API_URL = 'http://localhost:5000/api';
+//https://artsanconnectltd-3io0.onrender.com/api
 // Helper to set Authorization header
 const getAuthConfig = (token) => ({
   headers: { Authorization: `Bearer ${token}` },
